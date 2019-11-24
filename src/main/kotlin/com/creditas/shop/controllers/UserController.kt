@@ -33,9 +33,12 @@ class UserController {
     }
 
     @PostMapping("/user")
-    fun addUser(@RequestBody user: Users):ResponseEntity<Users>{
-        val result:Users = userService.addUser(user)
-        return ResponseEntity(result, HttpStatus.OK);
+    fun addUser(@RequestBody user: Users, request: HttpServletRequest): ResponseEntity<String>{
+        val userRegistry:Users = userService.addUser(user)
+        var result = userService.login(userRegistry.email,userRegistry.password )
+        if(!result.isPresent) return ResponseEntity("Datobutoss Incorrecto", HttpStatus.BAD_REQUEST)
+        var token:String = userService.getJWT(result.get().email as String,result.get().id as Int, request)
+        return ResponseEntity(token, HttpStatus.OK);
     }
 
     @GetMapping("/bill")
