@@ -25,6 +25,11 @@ class ProductsController {
     @Autowired
     private lateinit var productsTypeService: IProductTypeService;
 
+    @GetMapping("/all")
+    fun getProducts(@RequestParam(defaultValue= "0") page: Int,@RequestParam(defaultValue="sales") short: String): ResponseEntity<Page<ProductStock>> {
+        var result:Page<ProductStock> = productsStockService.getProductsStock(page,short)
+        return ResponseEntity(result,HttpStatus.OK);
+    }
     @GetMapping("/{id}")
     fun getProductsStockByProduct(@PathVariable id: Int): ResponseEntity<List<ProductStock>> {
         var result:List<ProductStock> = productsStockService.getProductByType(id)

@@ -1,6 +1,7 @@
 package com.creditas.shop.domain.entities
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonManagedReference
 import java.time.LocalDateTime
 import javax.persistence.*
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotNull
 data class ProductStock(
         @Id
         @GeneratedValue
-        var id: Int?,
+        var id: Int,
         @JsonManagedReference(value="product")
         @NotNull
         @ManyToOne(fetch = FetchType.EAGER)
@@ -39,9 +40,9 @@ data class ProductStock(
         var sales: Int,
         @NotNull
         var price: String?,
-        @JsonBackReference(value="product_stock")
-        @OneToMany(mappedBy = "products_stock",fetch = FetchType.LAZY, cascade = [(CascadeType.ALL)], orphanRemoval = true)
-        var bills: List<Bills>?,
+        @ManyToMany(mappedBy = "products_stocks")
+        @JsonBackReference(value="bill_product_stock")
+        var bills: List<Bills>? ,
         @NotNull
         var create_at: LocalDateTime? = LocalDateTime.now(),
         var update_at: LocalDateTime?
